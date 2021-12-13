@@ -42,13 +42,25 @@ void create_palette_greyscale(SDL_Color *colors) {
   }
 }
 
+void setup_window_icon(SDL_Window *window) {
+  SDL_Surface *iconSurface;
+  iconSurface = IMG_Load("resources/appicon.jpg");
+
+  SDL_SetWindowIcon(window, iconSurface);
+
+  SDL_FreeSurface(iconSurface);
+}
+
+
 int main() {
-  int w = 640;
-  int h = 1024;
+  int w = 1024;
+  int h = 768;
 
   SDL_Init(SDL_INIT_VIDEO);
   SDL_Window *window = SDL_CreateWindow("Foo", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h,
                                         SDL_WINDOW_SHOWN);
+  setup_window_icon(window);
+
   SDL_Surface *screen = SDL_GetWindowSurface(window);
   SDL_Surface *surface = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 8, 0, 0, 0, 0);
 
@@ -57,7 +69,7 @@ int main() {
   create_palette_vga(colors);
   SDL_SetPaletteColors(surface->format->palette, colors, 0, 256);
 
-  //uint16_t color = 0;
+  uint16_t color_start = 0;
   while (true) {
     SDL_Event e;
     while (SDL_PollEvent(&e) > 0) {
@@ -69,13 +81,13 @@ int main() {
     uint8_t *offscreen = (uint8_t *) surface->pixels;
     for (int i = 0; i < h; i++) {
       for (int j = 0; j < w; j++) {
-        offscreen[j] = i / 4;
+        offscreen[j] = color_start + i/3;
       }
       offscreen += surface->pitch;
     }
     SDL_BlitSurface(surface, NULL, screen, NULL);
     SDL_UpdateWindowSurface(window);
-    SDL_Delay(100);
-    //color++;
+    SDL_Delay(20);
+    color_start++;
   }
 }
