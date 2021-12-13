@@ -35,7 +35,7 @@ void create_palette_vga(SDL_Color *colors) {
 void create_palette_greyscale(SDL_Color *colors) {
     colors[15].r = colors[15].g = colors[15].b = 255;
     for(int i=0; i < 256; i++) {
-        uint8_t c = i & 0xf0;
+        uint8_t c = i & 0xff;
         colors[i].r = c;
         colors[i].g = c;
         colors[i].b = c;
@@ -67,7 +67,7 @@ int main() {
         uint8_t* offscreen = (uint8_t*)surface->pixels;
         for(int i = 0; i < h ; i++) {
             for(int j=0; j < w ; j++) {
-                offscreen[j] = i/4;
+                offscreen[j] = i / 4;
             }
             offscreen += surface->pitch;
         }
